@@ -1,0 +1,83 @@
+# zwiekszenie temperatury jak spadnie ponizej 21°C
+- alias: Ogrzewanie domu do 21°C
+ description: Włącz ogrzewanie gdy temperatura spadnie poniżej 21°C i wyłącz po osiągnięciu celu
+ trigger:
+   - platform: state
+     entity_id: sensor.fake_temperature
+ condition: []
+ action:
+   - choose:
+       - conditions:
+           - condition: numeric_state
+             entity_id: sensor.fake_temperature
+             below: 21.5
+         sequence:
+           - service: input_boolean.turn_on
+             target:
+               entity_id: input_boolean.fake_heater
+           - service: input_number.set_value # symulacja zwiększenia temperatury
+             data:
+               entity_id: input_number.fake_temp_input
+               value: 21.5
+       - conditions:
+           - condition: numeric_state
+             entity_id: sensor.fake_temperature
+             above: 21.4
+         sequence:
+           - service: input_boolean.turn_off
+             target:
+               entity_id: input_boolean.fake_heater
+ mode: single
+
+
+# Przypomnienie o wyłączeniou wentylatora w okapie po 30 minutach
+- alias: Przypomnienie o okapie po 30 minutach
+ description: Jeśli okap w kuchni jest włączony dłużej niż 30 minut, pokaż przypomnienie
+ trigger:
+   - platform: state
+     entity_id: input_boolean.kuchnia_okap_wentylator
+     to: "on"
+     for: "00:30:00"
+ condition: []
+ action:
+   - service: persistent_notification.create
+     data:
+       title: "Uwaga: Okap włączony"
+       message: "Okap kuchenny działa już ponad 30 minut. Czy chcesz go wyłączyć?"
+ mode: single
+
+
+# Światła w toalecie gasną po 2 minutach
+- id: swiatlo_toaleta_na_ruch
+ alias: Światło w toalecie na ruch
+ trigger:
+   - platform: state
+     entity_id: binary_sensor.ruch_toaleta
+     to: "on"
+ action:
+   - service: light.turn_on
+     target:
+       entity_id: light.toaleta
+   - wait_for_trigger:
+       - platform: state
+         entity_id: binary_sensor.ruch_toaleta
+         to: "off"
+         for: "00:02:00"
+   - service: light.turn_off
+     target:
+       entity_id: light.toaleta
+ mode: restart
+# symulacja
+- alias: Reset symulacji ruchu
+ trigger:
+   - platform: state
+     entity_id: input_boolean.fake_motion_toaleta
+     to: "on"
+     for: "00:00:10"
+ action:
+   - service: input_boolean.turn_off
+     target:
+       entity_id: input_boolean.fake_motion_toaleta
+
+
+

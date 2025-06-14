@@ -1,0 +1,274 @@
+# rolety w salonie
+open_salon_blinds:
+ alias: Otwórz rolety w salonie
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.salon_blinds_position
+     data:
+       value: 100
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Otwarto rolety na 100%"
+
+close_salon_blinds:
+ alias: Zamknij rolety w salonie
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.salon_blinds_position
+     data:
+       value: 0
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zamknięto rolety (0%)"
+
+stop_salon_blinds:
+ alias: Zatrzymaj rolety w salonie
+ sequence:
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zatrzymanie rolet (brak działania symulowanego)"
+
+set_position_salon_blinds:
+ alias: Ustaw pozycję rolet
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.salon_blinds_position
+     data:
+       value: "{{ position }}"
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Ustawiono pozycję rolet na {{ position }}%"
+
+
+# rolety w głównej sypialni
+open_master_bedroom_blinds:
+ alias: Otwórz rolety w duzej sypialni
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.master_bedroom_blinds_position
+     data:
+       value: 100
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Otwarto rolety na 100%"
+
+close_master_bedroom_blinds:
+ alias: Zamknij rolety w głównej sypialni
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.master_bedroom_blinds_position
+     data:
+       value: 0
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zamknięto rolety (0%)"
+
+stop_master_bedroom_blinds:
+ alias: Zatrzymaj rolety w głównej sypialni
+ sequence:
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zatrzymanie rolet (brak działania symulowanego)"
+
+set_position_master_bedroom_blinds:
+ alias: Ustaw pozycję rolet
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.master_bedroom_blinds_position
+     data:
+       value: "{{ position }}"
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Ustawiono pozycję rolet na {{ position }}%"
+
+
+# rolety w sypialni
+open_bedroom_blinds:
+ alias: Otwórz rolety w sypialni
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.bedroom_blinds_position
+     data:
+       value: 100
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Otwarto rolety na 100%"
+
+close_bedroom_blinds:
+ alias: Zamknij rolety w sypialni
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.bedroom_blinds_position
+     data:
+       value: 0
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zamknięto rolety (0%)"
+
+stop_bedroom_blinds:
+ alias: Zatrzymaj rolety w sypialni
+ sequence:
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zatrzymanie rolet (brak działania symulowanego)"
+
+set_position_bedroom_blinds:
+ alias: Ustaw pozycję rolet
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.bedroom_blinds_position
+     data:
+       value: "{{ position }}"
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Ustawiono pozycję rolet na {{ position }}%"
+
+
+# rolety w biurze
+open_office_blinds:
+ alias: Otwórz rolety w biurze
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.office_blinds_position
+     data:
+       value: 100
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Otwarto rolety na 100%"
+
+close_office_blinds:
+ alias: Zamknij rolety w biurze
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.office_blinds_position
+     data:
+       value: 0
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zamknięto rolety (0%)"
+
+stop_office_blinds:
+ alias: Zatrzymaj rolety w biurze
+ sequence:
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Zatrzymanie rolet (brak działania symulowanego)"
+
+set_position_office_blinds:
+ alias: Ustaw pozycję rolet
+ sequence:
+   - service: input_number.set_value
+     target:
+       entity_id: input_number.office_blinds_position
+     data:
+       value: "{{ position }}"
+   - service: logbook.log
+     data:
+       name: Rolety
+       message: "Ustawiono pozycję rolet na {{ position }}%"
+
+
+# Otwieranie bramy garazowej
+otworz_brama_garazowa:
+   alias: Otwórz bramę garażową
+   sequence:
+     - service: input_number.set_value
+       data:
+         entity_id: input_number.brama_pozycja
+         value: 100
+
+zamknij_brama_garazowa:
+   alias: Zamknij bramę garażową
+   sequence:
+     - service: input_number.set_value
+       data:
+         entity_id: input_number.brama_pozycja
+         value: 0
+
+stop_brama_garazowa:
+   alias: Zatrzymaj bramę garażową
+   sequence:
+     - service: persistent_notification.create
+       data:
+         title: "Stop"
+         message: "Symulacja: zatrzymano bramę"
+
+
+#zamykanie drzwi wejściowych
+przelacz_drzwi_wejsciowe:
+ alias: Zamknij drzwi wejściowe
+ sequence:
+   - service: input_boolean.toggle
+     target:
+       entity_id: input_boolean.drzwi_zamek
+
+
+# zamykanie dobranoc
+dobranoc_zamknij_dodatkowe:
+ alias: Zamknij rolety i bramę
+ sequence:
+   - service: script.zamknij_brama_garazowa
+   - service: script.close_bedroom_blinds
+   - service: script.close_master_bedroom_blinds
+   - service: script.close_office_blinds
+   - service: script.close_salon_blinds
+
+dobranoc_wszystko:
+ alias: Dobranoc wszystko
+ sequence:
+   - service: scene.turn_on
+     target:
+       entity_id: scene.dobranoc
+   - service: script.turn_on
+     target:
+       entity_id: script.dobranoc_zamknij_dodatkowe
+
+
+# otwieranie dzień dobry
+open_all_blinds:
+ alias: Otwórz wszystkie rolety
+ sequence:
+   - service: script.open_salon_blinds
+   - service: script.open_bedroom_blinds
+   - service: script.open_master_bedroom_blinds
+   - service: script.open_office_blinds
+
+dzien_dobry_wszystko:
+ alias: Pełny dzień dobry
+ sequence:
+   - service: scene.turn_on
+     target:
+       entity_id: scene.dzien_dobry
+   - delay: 1
+   - service: script.open_all_blinds
+
+
+
+
+

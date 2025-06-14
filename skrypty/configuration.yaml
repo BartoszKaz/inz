@@ -1,0 +1,638 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+ themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+
+input_boolean:
+ tv_salon:
+   name: TV w salonie
+   initial: off
+
+ kuchnia_ledy_state:
+   name: LEDy stan
+
+ kuchnia_okap_wentylator:
+   name: Okap kuchenny
+   initial: off
+
+ kuchnia_zmywarka:
+   name: Zmywarka
+   initial: off
+
+ toaleta_light_state:
+   name: Stan światła w toalecie
+   initial: off
+
+ fake_motion_toaleta:
+   name: Symulacja ruchu w toalecie
+   initial: off
+
+ drzwi_zamek:
+   name: Zamek drzwi wejściowych
+   initial: off
+
+ pralnia_pralka:
+   name: Pralka w pralni
+   initial: off
+
+ pralnia_suszarka:
+   name: Suszarka w pralni
+   initial: off
+
+
+input_number:
+ fake_energy:
+   name: Zużycie energii
+   min: 0
+   max: 100
+   step: 0.1
+   unit_of_measurement: "kWh"
+
+ fake_water:
+   name: Zużycie wody
+   min: 0
+   max: 1000
+   step: 1
+   unit_of_measurement: "gal"
+
+ salon_blinds_position:
+   name: Pozycja rolet
+   initial: 50
+   min: 0
+   max: 100
+   step: 1
+
+ master_bedroom_blinds_position:
+   name: Pozycja rolet
+   initial: 50
+   min: 0
+   max: 100
+   step: 1
+
+ bedroom_blinds_position:
+   name: Pozycja rolet
+   initial: 50
+   min: 0
+   max: 100
+   step: 1
+
+ office_blinds_position:
+   name: Pozycja rolet
+   initial: 35
+   min: 0
+   max: 100
+   step: 1
+
+ fake_temp_input:
+   name: Temperatura rzeczywista
+   min: 10
+   max: 30
+   step: 0.25
+   unit_of_measurement: "°C"
+
+ kuchnia_ledy_brightness:
+   name: Jasność LEDów
+   min: 0
+   max: 255
+   step: 1
+
+ lodowka_temp:
+   name: Temperatura w lodówce kuchnia
+   min: 2
+   max: 4
+   step: 1
+   unit_of_measurement: "°C"
+
+ zamrazarka_temp:
+   name: Temperatura w zamrażarce kuchnia
+   min: -30
+   max: -18
+   step: 1
+   unit_of_measurement: "°C"
+
+ brama_pozycja:
+   name: Pozycja bramy
+   min: 0
+   max: 100
+   step: 1
+   unit_of_measurement: "%"
+   initial: 0
+
+
+sensor:
+ - platform: template
+   sensors:
+     fake_temperature:
+       friendly_name: "Temperatura domowa"
+       unit_of_measurement: "°C"
+       value_template: "{{ states('input_number.fake_temp_input') }}"
+     salon_humidity:
+       friendly_name: "Wilgotność w salonie"
+       unit_of_measurement: "%"
+       value_template: "{{ 50 }}"
+
+
+template:
+ - sensor:
+     - name: "Zużycie energii"
+       unique_id: energia_dom
+       unit_of_measurement: "kWh"
+       state: "{{ states('input_number.fake_energy') }}"
+       device_class: energy
+       state_class: total_increasing
+
+     - name: "Zużycie wody"
+       unique_id: woda_dom
+       unit_of_measurement: "gal"
+       state: "{{ states('input_number.fake_water') }}"
+       device_class: water
+       state_class: total_increasing
+
+ - binary_sensor:
+     - name: "Ruch w toalecie"
+       unique_id: ruch_toalecie
+       device_class: motion
+       state: >
+         {{ is_state('input_boolean.fake_motion_toaleta', 'on') }}
+
+
+cover:
+ - platform: template
+   covers:
+     salon_blinds:
+       unique_id: salon_blinds_cover
+       friendly_name: "Rolety w salonie"
+       open_cover:
+         service: script.open_salon_blinds
+       close_cover:
+         service: script.close_salon_blinds
+       stop_cover:
+         service: script.stop_salon_blinds
+       set_cover_position:
+         service: script.set_position_salon_blinds
+         data:
+           position: "{{ position }}"
+       position_template: "{{ states('input_number.salon_blinds_position') | int }}"
+
+ - platform: template
+   covers:
+     master_bedroom_blinds:
+       unique_id: master_bedroom_cover
+       friendly_name: "Rolety w duzej sypialni"
+       open_cover:
+         service: script.open_master_bedroom_blinds
+       close_cover:
+         service: script.close_master_bedroom_blinds
+       stop_cover:
+         service: script.stop_master_bedroom_blinds
+       set_cover_position:
+         service: script.set_position_master_bedroom_blinds
+         data:
+           position: "{{ position }}"
+       position_template: "{{ states('input_number.master_bedroom_blinds_position') | int }}"
+
+ - platform: template
+   covers:
+     bedroom_blinds:
+       unique_id: bedroom_blinds_cover
+       friendly_name: "Rolety w sypialni"
+       open_cover:
+         service: script.open_bedroom_blinds
+       close_cover:
+         service: script.close_bedroom_blinds
+       stop_cover:
+         service: script.stop_bedroom_blinds
+       set_cover_position:
+         service: script.set_position_bedroom_blinds
+         data:
+           position: "{{ position }}"
+       position_template: "{{ states('input_number.bedroom_blinds_position') | int }}"
+
+ - platform: template
+   covers:
+     office_blinds:
+       unique_id: office_blinds_cover
+       friendly_name: "Rolety w biurze"
+       open_cover:
+         service: script.open_office_blinds
+       close_cover:
+         service: script.close_office_blinds
+       stop_cover:
+         service: script.stop_office_blinds
+       set_cover_position:
+         service: script.set_position_office_blinds
+         data:
+           position: "{{ position }}"
+       position_template: "{{ states('input_number.office_blinds_position') | int }}"
+
+
+ - platform: template
+   covers:
+     brama_garazowa:
+       friendly_name: "Brama garażowa"
+       device_class: garage
+       unique_id: garage_door
+       open_cover:
+         service: script.otworz_brama_garazowa
+       close_cover:
+         service: script.zamknij_brama_garazowa
+       stop_cover:
+         service: script.stop_brama_garazowa
+       position_template: "{{ states('input_number.brama_pozycja') | int }}"
+       set_cover_position:
+         service: input_number.set_value
+         data:
+           entity_id: input_number.brama_pozycja
+           value: "{{ position }}"
+
+
+light:
+ - platform: group
+   name: Światła w salonie
+   unique_id: salon_lights
+   entities:
+     - light.salon_light
+     - light.salon_lamp
+
+ - platform: group
+   name: Światła w kuchni
+   unique_id: kuchnia_lights
+   entities:
+     - light.kuchnia_ledy
+     - light.kuchnia_zyrandol
+     - light.kuchnia_okap
+
+ - platform: group
+   name: Światła w toalecie
+   unique_id: toilet_lights
+   entities:
+     - light.lustro_toaleta
+     - light.toaleta
+
+ - platform: group
+   name: Światła w korytarzu parter
+   unique_id: corridor_lights1
+   entities:
+     - light.korytarz_swiatlo1
+     - light.korytarz_swiatlo2
+
+ - platform: group
+   name: Światła w korytarzu piętro
+   unique_id: corridor_lights2
+   entities:
+     - light.korytarz_swiatlo3
+     - light.korytarz_swiatlo4
+
+ - platform: group
+   name: Światła w łazience
+   unique_id: bathroom_lights
+   entities:
+     - light.lustro_lazienka
+     - light.lazienka
+
+ - platform: group
+   name: Światła w sypialni głównej
+   unique_id: master_bedroom_lights
+   entities:
+     - light.master_bedroom_light
+     - light.master_bedroom_lamp
+     - light.master_bedroom_lamp2
+
+ - platform: group
+   name: Światła w sypialni
+   unique_id: bedroom_lights
+   entities:
+     - light.bedroom_light
+     - light.bedroom_lamp
+
+ - platform: group
+   name: Światła w biurze
+   unique_id: office_lights
+   entities:
+     - light.office_light
+     - light.office_lamp
+
+ - platform: template
+   lights:
+     salon_light:
+       friendly_name: "Żyrandol w salonie"
+       unique_id: "Salon światło"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.salon_light
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.salon_light
+
+ - platform: template
+   lights:
+     salon_lamp:
+       friendly_name: "Lampa w salonie"
+       unique_id: "lampa salonowa"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.salon_lamp
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.salon
+
+ - platform: template
+   lights:
+     kuchnia_ledy:
+       friendly_name: "LEDy podszafkowe w kuchni"
+       unique_id: "ledki"
+       level_template: "{{ states('input_number.kuchnia_ledy_brightness') | int }}"
+       turn_on:
+         - service: input_boolean.turn_on
+           target:
+             entity_id: input_boolean.kuchnia_ledy_state
+       turn_off:
+         - service: input_boolean.turn_off
+           target:
+             entity_id: input_boolean.kuchnia_ledy_state
+       set_level:
+         - service: input_number.set_value
+           data:
+             entity_id: input_number.kuchnia_ledy_brightness
+             value: "{{ brightness }}"
+
+ - platform: template
+   lights:
+     kuchnia_zyrandol:
+       friendly_name: "Żyrandol w kuchni"
+       unique_id: "Kuchnia światło"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.kuchnia_zyrandol
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.kuchnia_zyrandol
+
+ - platform: template
+   lights:
+       kuchnia_okap:
+         friendly_name: "Światło w okapie"
+         unique_id: "okapowe światło"
+         turn_on:
+           service: input_boolean.turn_on
+           target:
+             entity_id: input_boolean.kuchnia_okap
+         turn_off:
+           service: input_boolean.turn_off
+           target:
+             entity_id: input_boolean.kuchnia_okap
+
+ - platform: template
+   lights:
+     toaleta:
+       friendly_name: "Światło w toalecie"
+       unique_id: "swiatlo_w_toalecie"
+       value_template: "{{ is_state('input_boolean.toaleta_light_state', 'on') }}"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.toaleta_light_state
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.toaleta_light_state
+
+ - platform: template
+   lights: 
+     lustro_toaleta:
+       friendly_name: "lustro w toalecie"
+       unique_id: "lustro w toalecie"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.lustro_toaleta
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.lustro_toaleta
+
+ - platform: template
+   lights:
+     korytarz_swiatlo1:
+       friendly_name: "Punkt świetlny w korytarzu nr.1"
+       unique_id: "światło w korytarzu 1"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.korytarz_swiatlo1
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.korytarz_swiatlo1
+
+ - platform: template
+   lights:
+     korytarz_swiatlo2:
+       friendly_name: "Punkt świetlny w korytarzu nr.2"
+       unique_id: "światło w korytarzu 2"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.korytarz_swiatlo2
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.korytarz_swiatlo2
+
+ - platform: template
+   lights:
+     korytarz_swiatlo3:
+       friendly_name: "Punkt świetlny w korytarzu nr.3"
+       unique_id: "światło w korytarzu 3"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.korytarz_swiatlo3
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.korytarz_swiatlo3
+
+ - platform: template
+   lights:
+     korytarz_swiatlo4:
+       friendly_name: "Punkt świetlny w korytarzu nr.4"
+       unique_id: "światło w korytarzu 4"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.korytarz_swiatlo4
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.korytarz_swiatlo4
+
+ - platform: template
+   lights:
+     garaz_swiatla:
+       friendly_name: "Światło w garazu"
+       unique_id: "światło w garazu"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.garaz_swiatla
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.garaz_swiatla
+
+ - platform: template
+   lights:
+     pralnia_swiatlo:
+       friendly_name: "Światło w pralni"
+       unique_id: "światło w pralni"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.pralnia_swiatlo
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.pralnia_swiatlo
+
+ - platform: template
+   lights:
+     lazienka:
+       friendly_name: "Światło w łazience"
+       unique_id: "swiatlo_w_lazience"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.lazienka
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.lazienka
+
+ - platform: template
+   lights: 
+     lustro_lazienka:
+       friendly_name: "lustro w łazience"
+       unique_id: "lustro w łazience"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.lustro_lazienka
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.lustro_lazienka
+
+ - platform: template
+   lights:
+     master_bedroom_light:
+       friendly_name: "Żyrandol w sypialni głównej"
+       unique_id: "Sypialnia główna światło"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.master_bedroom_lihgt
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.master_bedroom_light
+
+ - platform: template
+   lights:
+     master_bedroom_lamp:
+       friendly_name: "Lampka nocna 1 w sypialni głównej"
+       unique_id: "lampka 1 sypialnia"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.master_bedroom_lamp
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.master_bedroom_lamp
+
+ - platform: template
+   lights:
+     master_bedroom_lamp2:
+       friendly_name: "Lampka nocna 2 w sypialni głównej"
+       unique_id: "lampka 2 sypialnia"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.master_bedroom_lamp2
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.master_bedroom_lamp2
+
+ - platform: template
+   lights:
+     bedroom_light:
+       friendly_name: "Żyrandol w sypialni"
+       unique_id: "Sypialnia światło"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.bedroom_lihgt
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.bedroom_light
+
+ - platform: template
+   lights:
+     bedroom_lamp:
+       friendly_name: "Lampka nocna w sypialni"
+       unique_id: "lampka sypialnia"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.bedroom_lamp
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.bedroom_lamp
+
+ - platform: template
+   lights:
+     office_light:
+       friendly_name: "Światło w biurze"
+       unique_id: "biuro światło"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.office_lihgt
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.office_light
+
+ - platform: template
+   lights:
+     office_lamp:
+       friendly_name: "Lampka w biurze"
+       unique_id: "lampka biuro"
+       turn_on:
+         service: input_boolean.turn_on
+         target:
+           entity_id: input_boolean.office_lamp
+       turn_off:
+         service: input_boolean.turn_off
+         target:
+           entity_id: input_boolean.office_lamp
+
+
+

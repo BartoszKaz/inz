@@ -1,0 +1,95 @@
+- name: Kino
+ icon: mdi:movie-open
+ entities:
+   input_boolean.tv_salon: on
+   input_boolean.salon_light: off
+   input_boolean.salon_lamp: off
+   cover.salon_blinds:
+     state: closed
+
+
+- name: Zapal wszystkie światła
+ icon: mdi:lightbulb-group
+ entities:
+   light.salon_light: on
+   light.salon_lamp: on
+   light.kuchnia_ledy: on
+   light.kuchnia_zyrandol: on
+   light.kuchnia_okap: on
+   light.toaleta: on
+   light.lustro_toaleta: on
+   light.korytarz_swiatlo1: on
+   light.korytarz_swiatlo2: on
+   light.korytarz_swiatlo3: on
+   light.korytarz_swiatlo4: on
+   light.lazienka: on
+   light.lustro_lazienka: on
+   light.master_bedroom_light: on
+   light.master_bedroom_lamp: on
+   light.master_bedroom_lamp2: on
+   light.bedroom_light: on
+   light.bedroom_lamp: on
+   light.office_light: on
+   light.office_lamp: on
+   light.garaz_swiatla: on
+   light.pralnia_swiatlo: on
+
+
+- name: Dobranoc
+ icon: mdi:weather-night
+ entities:
+   light.salon_light: off
+   light.salon_lamp: off
+   light.kuchnia_ledy: off
+   light.kuchnia_zyrandol: off
+   light.kuchnia_okap: off
+   light.toaleta: off
+   light.lustro_toaleta: off
+   light.korytarz_swiatlo1: off
+   light.korytarz_swiatlo2: off
+   light.korytarz_swiatlo3: off
+   light.korytarz_swiatlo4: off
+   light.lazienka: off
+   light.lustro_lazienka: off
+   light.master_bedroom_light: off
+   light.master_bedroom_lamp: off
+   light.master_bedroom_lamp2: off
+   light.bedroom_light: off
+   light.bedroom_lamp: off
+   light.office_light: off
+   light.office_lamp: off
+   light.garaz_swiatla: off
+   light.pralnia_swiatlo: off
+   input_boolean.drzwi_zamek: off
+
+
+- name: Dzień dobry
+ icon: mdi:weather-sunset
+ entities:
+   light.salon_light: off
+   light.salon_lamp: off
+   light.kuchnia_ledy: off
+   light.kuchnia_zyrandol: off
+   light.kuchnia_okap: off
+   light.toaleta: off
+   light.lustro_toaleta: off
+   light.korytarz_swiatlo1: off
+   light.korytarz_swiatlo2: off
+   light.korytarz_swiatlo3: off
+   light.korytarz_swiatlo4: off
+   light.lazienka: off
+   light.lustro_lazienka: off
+   light.master_bedroom_light: off
+   light.master_bedroom_lamp: off
+   light.master_bedroom_lamp2: off
+   light.bedroom_light: off
+   light.bedroom_lamp: off
+   light.office_light: off
+   light.office_lamp: off
+   light.garaz_swiatla: off
+   light.pralnia_swiatlo: off
+   input_boolean.drzwi_zamek: on
+
+
+
+
